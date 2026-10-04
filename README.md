@@ -45,3 +45,10 @@ The trade-off is scope. This is not a subtitle editing toolkit. It does not re-t
 - `Subtitle(start: int, end: int, text: str)` — frozen dataclass. `start` and `end` are millisecond offsets from the start of the media.
 - `parse_srt(content: str) -> list[Subtitle]` — parse SRT-formatted text. Raises `ValueError` on an unparseable timestamp line.
 - `serialize_srt(subtitles: list[Subtitle]) -> str` — serialize records back to SRT text.
+
+## Design notes
+
+The window stores values eagerly rather than keeping running aggregates. Running
+sums drift with floating point over long streams, and recomputing from a small
+buffer is cheap enough that the drift is not worth the speed.
+
